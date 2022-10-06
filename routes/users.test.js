@@ -23,7 +23,7 @@ describe('GET /users', () => {
       .get('/users');
 
     // The values for the expected result are based on those defined
-    // in seed data. See /db/seeds/initial_data.js
+    // in seed data. See /seeds/create-test-users.js
     expect(res.statusCode).toEqual(200);
     expect(res.body.length).toEqual(2);
     expect(res.body[0]).toHaveProperty('id');
@@ -39,7 +39,7 @@ describe('GET /users/1', () => {
       .get('/users/1');
 
     // The values for the expected result are based on those defined
-    // in seed data. See /db/seeds/initial_data.js
+    // in seed data. See /seeds/create-test-users.js
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('id');
     expect(res.body.id).toEqual(1);

@@ -1,4 +1,3 @@
-const console = require('console');
 const db = require('../db/db');
 
 class UserExistsError extends Error {
@@ -28,7 +27,6 @@ exports.create = async (name) => {
     const user = { id: inserted[0].id, name };
     return user;
   } catch (err) {
-    console.log(err);
     if (err.code === 'SQLITE_CONSTRAINT') {
       throw new UserExistsError(`user '${name}' already exists`);
     } else {
