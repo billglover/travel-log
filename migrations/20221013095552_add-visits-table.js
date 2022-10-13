@@ -3,17 +3,13 @@
  * @returns { Promise<void> }
  */
 exports.up = async function up(knex) {
-  await knex.schema.createTable('countries', (table) => {
+  return knex.schema.createTable('visits', (table) => {
     table.increments('id').primary();
-    table.text('name').notNullable().unique().index();
+    table.integer('user_id').notNullable().index();
+    table.integer('country_id').notNullable().index();
+    table.dateTime('arrival_time');
+    table.dateTime('departure_time');
   });
-
-  return knex('countries').insert([
-    { name: 'Canada' },
-    { name: 'Croatia' },
-    { name: 'Spain' },
-    { name: 'Italy' },
-  ]);
 };
 
 /**
@@ -22,5 +18,5 @@ exports.up = async function up(knex) {
  */
 exports.down = function down(knex) {
   return knex.schema
-    .dropTable('countries');
+    .dropTable('visits');
 };
