@@ -124,6 +124,7 @@ jobs:
           export IMAGE_REGISTRY=$IMAGE_REGISTRY
           export IMAGE_NAME=$IMAGE_NAME
           export IMAGE_DIGEST=$IMAGE_DIGEST
+          export NODE_ENV=production
           cd travel-log
           cat docker-compose.yaml | envsubst > docker-compose-live.yaml
 
