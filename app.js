@@ -6,6 +6,7 @@ const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const countriesRouter = require('./routes/countries');
+const visitsRouter = require('./routes/visits');
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/countries', countriesRouter);
+app.use('/visits', visitsRouter);
 
 function errorHandler(err, req, res, next) {
   const data = {
