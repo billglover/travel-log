@@ -2,11 +2,16 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.up = function up(knex) {
-  return knex.schema.createTable('users', (table) => {
-    table.increments('id');
+exports.up = async function up(knex) {
+  await knex.schema.createTable('users', (table) => {
+    table.increments('id').primary();
     table.text('name').notNullable().unique();
   });
+
+  return knex('users').insert([
+    { name: 'Jen' },
+    { name: 'Bill' },
+  ]);
 };
 
 /**
