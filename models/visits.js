@@ -19,9 +19,6 @@ exports.get_by_id = async (id) => {
   const dt = new Date(dtTs);
 
   // we can now log these
-  console.log('arrival_time', typeof at, at.toISOString());
-  console.log('departure_time', typeof dt, dt.toISOString());
-
   visit.arrival_time = at.toISOString();
   visit.departure_time = dt.toISOString();
   return visit;
