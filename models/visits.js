@@ -35,18 +35,23 @@ exports.get_by_id = async (id) => {
 // creates & saves a new visit in SQLite DB
 exports.create = async (userId, countryId, arrivalTime, departureTime) => {
   try {
+    const atTs = Date.parse(arrivalTime);
+    const dtTs = Date.parse(departureTime);
+    const at = new Date(atTs);
+    const dt = new Date(dtTs);
+
     const inserted = await db('visits').returning('id').insert({
       user_id: userId,
       country_id: countryId,
-      arrival_time: arrivalTime,
-      departure_time: departureTime,
+      arrival_time: at.toISOString(),
+      departure_time: dt.toISOString(),
     });
     const visit = {
       id: inserted[0].id,
       user_id: userId,
       country_id: countryId,
-      arrival_time: arrivalTime,
-      departure_time: departureTime,
+      arrival_time: at.toISOString(),
+      departure_time: dt.toISOString(),
     };
     return visit;
   } catch (err) {
