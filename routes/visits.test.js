@@ -44,12 +44,48 @@ describe('POST /visit', () => {
     const res = await request(app)
       .post('/visits')
       .send(visit);
+    visit.id = res.body.id;
     expect(res.statusCode).toEqual(201);
     expect(typeof res.body.arrival_time).toEqual('string');
     expect(res.body).toHaveProperty('country_id');
     expect(res.body).toHaveProperty('departure_time');
     expect(res.body.user_id).toEqual(visit.user_id);
     expect(res.body.departure_time).toEqual(visit.departure_time);
+  });
+
+  it('should create the visit in the DB', async () => {
+    const res = await request(app)
+      .get(`/visits/${visit.id}`);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.user_id).toEqual(visit.user_id);
+    expect(res.body).toHaveProperty('arrival_time');
+    expect(res.body.arrival_time).toEqual(visit.arrival_time);
+  });
+});
+
+describe('POST /visit (with timezone)', () => {
+  const visit = {
+    user_id: 1,
+    country_id: 3,
+    arrival_time: '2022-10-27T09:27:25.000+0100',
+    departure_time: '2022-10-26T09:27:25.000Z',
+  };
+  const expectedArrivalTime = '2022-10-27T08:27:25.000Z';
+
+  it('should respond with a new visit', async () => {
+    const res = await request(app)
+      .post('/visits')
+      .send(visit);
     visit.id = res.body.id;
+    expect(res.statusCode).toEqual(201);
+    expect(res.body.arrival_time).toEqual(expectedArrivalTime);
+  });
+
+  it('should create the visit in the DB', async () => {
+    const res = await request(app)
+      .get(`/visits/${visit.id}`);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty('arrival_time');
+    expect(res.body.arrival_time).toEqual(expectedArrivalTime);
   });
 });
