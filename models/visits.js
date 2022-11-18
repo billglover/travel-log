@@ -23,6 +23,7 @@ exports.get_all = async () => {
     if (typeof properties.user_id !== 'number') {
       return;
     }
+    newVisits.push(visits2);
   });
   console.log(newVisits);
   return newVisits;
