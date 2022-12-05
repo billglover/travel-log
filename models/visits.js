@@ -32,9 +32,9 @@ exports.get_all = async () => {
 // get_by_id returns all info regarding a single visit
 exports.get_by_id = async (id) => {
   const visit = await db('visits', 'countries')
-    .where({ id })
-    .first(['id', 'user_id', 'country_id', 'arrival_time', 'departure_time'])
-    .select(['name']);
+    .join('countries', 'visits.country_id', '=', 'countries.id')
+    .where({ 'visits.id': id })
+    .first(['visits.id', 'user_id', 'country_id', 'name', 'arrival_time', 'departure_time']);
 
   // Parse dates in the DB from strings to number (seconds since UNIX epoch)
   const atTs = Date.parse(visit.arrival_time);
