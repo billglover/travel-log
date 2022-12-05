@@ -15,8 +15,8 @@ describe('GET /visits', () => {
   it('should respond with status 200 ok', async () => {
     const res = await request(app).get('/visits');
     expect(res.statusCode).toEqual(200);
-    expect(res.body[0]).toHaveProperty('country_id');
-    expect(res.body[0]).toHaveProperty('user_id');
+    expect(res.body[0]).toHaveProperty('country');
+    expect(res.body[0]).toHaveProperty('user');
     expect(res.body.id).not.toBe(null);
   });
 });

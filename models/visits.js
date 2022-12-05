@@ -10,13 +10,31 @@ exports.ConstraintIdNullError = ConstraintIdNullError;
 
 // get_all returns all the visits from the DB.
 exports.get_all = async () => {
-  const visits = await db('visits').select(['id', 'user_id', 'country_id']);
-  return visits;
+  const visits = await db('visits')
+    .join('countries', 'visits.country_id', '=', 'countries.id')
+    .select(['visits.id', 'user_id', 'country_id', 'name']);
+  const newVisits = [];
+  visits.forEach((properties) => {
+    const visits2 = {
+      id: properties.id,
+      user: { id: properties.user_id },
+      country: { id: properties.country_id, name: properties.name },
+    };
+    if (typeof properties.user_id !== 'number') {
+      return;
+    }
+    newVisits.push(visits2);
+  });
+  console.log(newVisits);
+  return newVisits;
 };
 
 // get_by_id returns all info regarding a single visit
 exports.get_by_id = async (id) => {
-  const visit = await db('visits').where({ id }).first(['id', 'user_id', 'country_id', 'arrival_time', 'departure_time']);
+  const visit = await db('visits', 'countries')
+    .join('countries', 'visits.country_id', '=', 'countries.id')
+    .where({ 'visits.id': id })
+    .first(['visits.id', 'user_id', 'country_id', 'name', 'arrival_time', 'departure_time']);
 
   // Parse dates in the DB from strings to number (seconds since UNIX epoch)
   const atTs = Date.parse(visit.arrival_time);
