@@ -15,8 +15,8 @@ describe('GET /visits', () => {
   it('should respond with status 200 ok', async () => {
     const res = await request(app).get('/visits');
     expect(res.statusCode).toEqual(200);
-    expect(res.body[0]).toHaveProperty('country');
     expect(res.body[0]).toHaveProperty('user');
+    expect(res.body[0]).toHaveProperty('country');
     expect(res.body.id).not.toBe(null);
   });
 });
@@ -57,9 +57,10 @@ describe('POST /visit', () => {
     const res = await request(app)
       .get(`/visits/${visit.id}`);
     expect(res.statusCode).toEqual(200);
-    expect(res.body.user_id).toEqual(visit.user_id);
+    expect(typeof res.body.user_id).toEqual('number');
     expect(res.body).toHaveProperty('arrival_time');
     expect(res.body.arrival_time).toEqual(visit.arrival_time);
+    expect(res.body.country).toHaveProperty('name');
   });
 });
 
