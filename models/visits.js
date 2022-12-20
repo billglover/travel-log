@@ -47,7 +47,6 @@ exports.get_by_id = async (id) => {
   // we can now log these
   visit.arrival_time = at.toISOString();
   visit.departure_time = dt.toISOString();
-  
   /* const singleVisit = [];
   Object.entries(visit).map((entry) => {
     const key = entry[0];
