@@ -47,7 +47,26 @@ exports.get_by_id = async (id) => {
   // we can now log these
   visit.arrival_time = at.toISOString();
   visit.departure_time = dt.toISOString();
-  return visit;
+  /* const singleVisit = [];
+  Object.entries(visit).map((entry) => {
+    const key = entry[0];
+    const value = entry[1];
+
+    const nestedObject = {};
+    nestedObject[key] = value;
+    singleVisit.push(nestedObject);
+    return singleVisit;
+  });
+  */
+  const singleVisit = {
+    id: visit.id,
+    user_id: visit.user_id,
+    country: { id: visit.country_id, name: visit.name },
+    departure_time: visit.departure_time,
+    arrival_time: visit.arrival_time,
+  };
+  console.log(singleVisit);
+  return singleVisit;
 };
 
 // creates & saves a new visit in SQLite DB
