@@ -1,12 +1,12 @@
 const visitsModel = require('../models/visits');
 
 exports.list = async (req, res) => {
-  const visits = await visitsModel.get_all();
+  const visits = await visitsModel.get_all(2);
   return res.json(visits);
 };
 
 exports.get = async (req, res) => {
-  const visit = await visitsModel.get_by_id(req.params.id);
+  const visit = await visitsModel.get_by_id(req.params.id, 2);
   return res.json(visit);
 };
 
