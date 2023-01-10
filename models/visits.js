@@ -1,4 +1,5 @@
 const db = require('../db/db');
+/* eslint max-classes-per-file: ["error", 2] */
 
 class ConstraintIdNullError extends Error {
   constructor(message) {
@@ -8,11 +9,22 @@ class ConstraintIdNullError extends Error {
 }
 exports.ConstraintIdNullError = ConstraintIdNullError;
 
+class NotFoundError extends Error {
+  constructor(message) {
+    super(message);
+    this.status = 404;
+    this.name = 'NotFoundError';
+  }
+}
+exports.NotFoundError = NotFoundError;
+
 // get_all returns all the visits from the DB.
-exports.get_all = async () => {
+exports.get_all = async (userId) => {
   const visits = await db('visits')
     .join('countries', 'visits.country_id', '=', 'countries.id')
-    .select(['visits.id', 'user_id', 'country_id', 'name']);
+    .select(['visits.id', 'user_id', 'country_id', 'name'])
+    .where({ 'visits.user_id': userId });
+
   const newVisits = [];
   visits.forEach((properties) => {
     const visits2 = {
@@ -30,12 +42,14 @@ exports.get_all = async () => {
 };
 
 // get_by_id returns all info regarding a single visit
-exports.get_by_id = async (id) => {
+exports.get_by_id = async (id, userId) => {
   const visit = await db('visits', 'countries')
     .join('countries', 'visits.country_id', '=', 'countries.id')
-    .where({ 'visits.id': id })
+    .where({ 'visits.id': id, 'visits.user_id': userId })
     .first(['visits.id', 'user_id', 'country_id', 'name', 'arrival_time', 'departure_time']);
-
+  if (visit === undefined) {
+    throw new NotFoundError('visit not found');
+  }
   // Parse dates in the DB from strings to number (seconds since UNIX epoch)
   const atTs = Date.parse(visit.arrival_time);
   const dtTs = Date.parse(visit.departure_time);
