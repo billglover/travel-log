@@ -14,6 +14,16 @@ exports.get_all = async () => {
   return users;
 };
 
+// get_by_token returns 1 user based on a token
+// if invalid token, undefined
+// if empty token, undefined
+exports.get_by_token = async (token) => {
+  const user = await db('users', 'tokens')
+    .join('tokens', 'tokens.user_id', '=', 'users.id')
+    .where({ 'tokens.bearer_token': token })
+    .first(['users.id', 'users.name']);
+  return user;
+};
 // get_by_id finds and returns a user based on user.id.
 exports.get_by_id = async (id) => {
   const user = await db('users').where({ id }).first(['id', 'name']);

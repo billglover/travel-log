@@ -21,14 +21,14 @@ describe('GET /visits', () => {
   });
 });
 
-describe('GET /visits/1', () => {
+describe('GET /visits/2', () => {
   it('should respond with a single visit', async () => {
-    const res = await request(app).get('/visits/1');
+    const res = await request(app).get('/visits/2');
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('user_id');
-    expect(res.body.user_id).toEqual(1);
+    expect(res.body.user_id).toEqual(2);
     expect(res.body).toHaveProperty('arrival_time');
-    expect(res.body.departure_time).toEqual('2022-10-27T09:27:25.000Z');
+    expect(res.body.departure_time).toEqual('2022-11-27T08:27:24.000Z');
   });
 });
 
