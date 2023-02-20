@@ -28,13 +28,13 @@ describe('GET /visits/2', () => {
     expect(res.body).toHaveProperty('user_id');
     expect(res.body.user_id).toEqual(2);
     expect(res.body).toHaveProperty('arrival_time');
-    expect(res.body.departure_time).toEqual('2022-11-27T08:27:24.000Z');
+    expect(res.body.departure_time).toEqual('2022-11-27T09:27:24.000Z');
   });
 });
 
 describe('POST /visit', () => {
   const visit = {
-    user_id: 1,
+    user_id: 2,
     country_id: 3,
     arrival_time: '2022-10-27T09:27:25.000Z',
     departure_time: '2022-10-26T09:27:25.000Z',
@@ -66,7 +66,7 @@ describe('POST /visit', () => {
 
 describe('POST /visit (with timezone)', () => {
   const visit = {
-    user_id: 1,
+    user_id: 2,
     country_id: 3,
     arrival_time: '2022-10-27T09:27:25.000+0100',
     departure_time: '2022-10-26T09:27:25.000Z',
