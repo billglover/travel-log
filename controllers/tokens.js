@@ -7,5 +7,5 @@ exports.list = async (req, res) => {
 
 exports.get = async (req, res) => {
   const token = await tokensModel.get_token_by_user_id(req.params.user_id);
-  return res.josn(token);
+  return res.json(token);
 };
