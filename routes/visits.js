@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.get('/', passport.authenticate('bearer', { session: false }), visitsController.list);
 router.get('/:id', passport.authenticate('bearer', { session: false }), visitsController.get);
-router.post('/', visitsController.create);
+router.post('/', passport.authenticate('bearer', { session: false }), visitsController.create);
 
 module.exports = router;

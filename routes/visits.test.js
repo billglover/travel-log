@@ -12,23 +12,35 @@ afterAll(async () => {
 });
 
 describe('GET /visits', () => {
-  it('should respond with status 200 ok', async () => {
-    const res = await request(app).get('/visits');
+  it('should respond with status 200 with valid token', async () => {
+    const res = await request(app).get('/visits?access_token=ABC123');
     expect(res.statusCode).toEqual(200);
     expect(res.body[0]).toHaveProperty('user');
     expect(res.body[0]).toHaveProperty('country');
     expect(res.body.id).not.toBe(null);
   });
+  it('should respond with status 401 with invalid token', async () => {
+    const res = await request(app).get('/visits?access_token=ABC125');
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.status).toEqual(401);
+    expect(res.body).toHaveProperty('message');
+  });
 });
 
-describe('GET /visits/2', () => {
-  it('should respond with a single visit', async () => {
-    const res = await request(app).get('/visits/2');
+describe('GET /visits/13', () => {
+  it('should respond with a single visit with valid token', async () => {
+    const res = await request(app).get('/visits/13/?access_token=DEF456');
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('user_id');
-    expect(res.body.user_id).toEqual(2);
+    expect(res.body.user_id).toEqual(1);
     expect(res.body).toHaveProperty('arrival_time');
-    expect(res.body.departure_time).toEqual('2022-11-27T09:27:24.000Z');
+    expect(res.body.departure_time).toEqual('2022-10-30T23:00:00.000Z');
+  });
+  it('should not respond with a single visit with invalid token', async () => {
+    const res = await request(app).get('/visits/13/?access_token=DEF458');
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.status).toEqual(401);
+    expect(res.body).toHaveProperty('message');
   });
 });
 
