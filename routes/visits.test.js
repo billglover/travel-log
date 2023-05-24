@@ -46,15 +46,15 @@ describe('GET /visits/13', () => {
 
 describe('POST /visit', () => {
   const visit = {
-    user_id: 2,
-    country_id: 3,
-    arrival_time: '2022-10-27T09:27:25.000Z',
-    departure_time: '2022-10-26T09:27:25.000Z',
+    user_id: 1,
+    country_id: 1,
+    arrival_time: '2023-05-23T13:30:00.000Z',
+    departure_time: '2023-05-24T13:30:00.000Z',
   };
 
   it('should respond with a new visit', async () => {
     const res = await request(app)
-      .post('/visits')
+      .post('/visits/?access_token=DEF456')
       .send(visit);
     visit.id = res.body.id;
     expect(res.statusCode).toEqual(201);
@@ -67,7 +67,7 @@ describe('POST /visit', () => {
 
   it('should create the visit in the DB', async () => {
     const res = await request(app)
-      .get(`/visits/${visit.id}`);
+      .get(`/visits/${visit.id}/?access_token=DEF456`);
     expect(res.statusCode).toEqual(200);
     expect(typeof res.body.user_id).toEqual('number');
     expect(res.body).toHaveProperty('arrival_time');
