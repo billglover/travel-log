@@ -47,12 +47,12 @@ describe('GET /visits/13', () => {
 describe('POST /visit', () => {
   const visit = {
     user_id: 1,
-    country_id: 1,
+    country_id: 2,
     arrival_time: '2023-05-23T13:30:00.000Z',
     departure_time: '2023-05-24T13:30:00.000Z',
   };
 
-  it('should respond with a new visit', async () => {
+  it('should respond with a new visit with valid token', async () => {
     const res = await request(app)
       .post('/visits/?access_token=DEF456')
       .send(visit);
@@ -65,7 +65,17 @@ describe('POST /visit', () => {
     expect(res.body.departure_time).toEqual(visit.departure_time);
   });
 
-  it('should create the visit in the DB', async () => {
+  it('should not respond with a new visit with invalid token', async () => {
+    const res = await request(app)
+      .post('/visits/?access_token=DEF459')
+      .send(visit);
+    visit.id = res.body.id;
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.status).toEqual(401);
+    expect(res.body).toHaveProperty('message');
+  });
+
+  it('should create the visit in the DB with valid token', async () => {
     const res = await request(app)
       .get(`/visits/${visit.id}/?access_token=DEF456`);
     expect(res.statusCode).toEqual(200);
@@ -85,18 +95,18 @@ describe('POST /visit (with timezone)', () => {
   };
   const expectedArrivalTime = '2022-10-27T08:27:25.000Z';
 
-  it('should respond with a new visit', async () => {
+  it('should respond with a new visit with valid token', async () => {
     const res = await request(app)
-      .post('/visits')
+      .post('/visits/?access_token=ABC123')
       .send(visit);
     visit.id = res.body.id;
     expect(res.statusCode).toEqual(201);
     expect(res.body.arrival_time).toEqual(expectedArrivalTime);
   });
 
-  it('should create the visit in the DB', async () => {
+  it('should create the visit in the DB with valid token', async () => {
     const res = await request(app)
-      .get(`/visits/${visit.id}`);
+      .get(`/visits/${visit.id}/?access_token=ABC123`);
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('arrival_time');
     expect(res.body.arrival_time).toEqual(expectedArrivalTime);
