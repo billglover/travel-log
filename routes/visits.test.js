@@ -69,7 +69,8 @@ describe('POST /visit', () => {
     const res = await request(app)
       .post('/visits/?access_token=DEF459')
       .send(visit);
-    visit.id = res.body.id;
+    // visit.id = res.body.id;
+    // console.log(visit.id, 'xyz');
     expect(res.statusCode).toEqual(401);
     expect(res.body.status).toEqual(401);
     expect(res.body).toHaveProperty('message');
@@ -83,6 +84,14 @@ describe('POST /visit', () => {
     expect(res.body).toHaveProperty('arrival_time');
     expect(res.body.arrival_time).toEqual(visit.arrival_time);
     expect(res.body.country).toHaveProperty('name');
+  });
+
+  it('should not create the visit in the DB with invalid token', async () => {
+    const res = await request(app)
+      .get(`/visits/${visit.id}/?access_token=DEF458`);
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.status).toEqual(401);
+    expect(res.body).toHaveProperty('message');
   });
 });
 
@@ -104,11 +113,28 @@ describe('POST /visit (with timezone)', () => {
     expect(res.body.arrival_time).toEqual(expectedArrivalTime);
   });
 
+  it('should not respond with a new visit with invalid token', async () => {
+    const res = await request(app)
+      .post('/visits/?access_token=DEF459')
+      .send(visit);
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.status).toEqual(401);
+    expect(res.body).toHaveProperty('message');
+  });
+
   it('should create the visit in the DB with valid token', async () => {
     const res = await request(app)
       .get(`/visits/${visit.id}/?access_token=ABC123`);
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('arrival_time');
     expect(res.body.arrival_time).toEqual(expectedArrivalTime);
+  });
+
+  it('should not create the visit in the DB with invalid token', async () => {
+    const res = await request(app)
+      .get(`/visits/${visit.id}/?access_token=DEF458`);
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.status).toEqual(401);
+    expect(res.body).toHaveProperty('message');
   });
 });
