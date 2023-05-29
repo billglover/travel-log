@@ -78,11 +78,12 @@ describe('POST /users', () => {
 
     // Keep the user.id for use in subsequent tests
     user.id = res.body.id;
+    console.log(user.id, 'abcc');
   });
 
   it('should create the user in the DB', async () => {
     const res = await request(app)
-      .get(`/users/${user.id}`);
+      .get(`/users/${user.id}/?access_token=ABC123`);
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('id');
     expect(res.body.id).toEqual(user.id);
