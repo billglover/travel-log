@@ -85,6 +85,9 @@ exports.get_by_id = async (id, userId) => {
 
 // creates & saves a new visit in SQLite DB
 exports.create = async (userId, countryId, arrivalTime, departureTime) => {
+  console.log({
+    userId, countryId, arrivalTime, departureTime,
+  });
   try {
     const atTs = Date.parse(arrivalTime);
     const dtTs = Date.parse(departureTime);
