@@ -18,10 +18,12 @@ passport.use(new BearerStrategy(async (token, done) => {
    const user = await tokensModels.get_user_by_token(token);
   if (user === undefined) {
     console.log('invalid id', user);
-    return done('invalid token');
+    const err = new Error('Inavlid token');
+    err.status = 401;
+    return done(err);
   }
   console.log('valid id', user);
-  return done(null, token, { scpoe: 'all', user_id: user.user_id });
+  return done(null, token, { scope: 'all', user_id: user.user_id });
 }));
 
 app.use(logger('dev', { skip: () => process.env.NODE_ENV === 'test' }));
