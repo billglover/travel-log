@@ -10,7 +10,7 @@ exports.get = async (req, res) => {
   return res.json(user);
 };
 
-exports.create = async (req, res) => {
+exports.create = async (req, res, next) => {
   try {
     const user = await usersModel.create(req.body.name);
     return res.status(201).json(user);
@@ -20,6 +20,7 @@ exports.create = async (req, res) => {
     } else {
       err.message = 'unable to create user';
     }
-    throw err;
+    next(err);
+    return err;
   }
 };
