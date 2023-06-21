@@ -15,7 +15,7 @@ const tokensModels = require('./models/tokens');
 const app = express();
 
 passport.use(new BearerStrategy(async (token, done) => {
-   const user = await tokensModels.get_user_by_token(token);
+  const user = await tokensModels.get_user_by_token(token);
   if (user === undefined) {
     console.log('invalid id', user);
     const err = new Error('Inavlid token');
