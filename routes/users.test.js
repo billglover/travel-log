@@ -18,9 +18,9 @@ afterAll(async () => {
 });
 
 describe('GET /users', () => {
-  it('should respond with an array of users', async () => {
+  it('should respond with an array of users with valid token', async () => {
     const res = await request(app)
-      .get('/users');
+      .get('/users?access_token=DEF456');
 
     // The values for the expected result are based on those defined
     // in seed data. See /seeds/create-test-users.js
@@ -31,20 +31,33 @@ describe('GET /users', () => {
     expect(res.body[0]).toHaveProperty('name');
     expect(res.body[0].name).toEqual('jen');
   });
+  it('should not respond with an array of users with invalid token', async () => {
+    const res = await request(app)
+      .get('/users?access_token=DEF457');
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.status).toEqual(401);
+    expect(res.body).toHaveProperty('message');
+  });
 });
 
-describe('GET /users/1', () => {
-  it('should respond with a single user', async () => {
+describe('GET /users/2', () => {
+  it('should respond with a single user with valid token', async () => {
     const res = await request(app)
-      .get('/users/1');
-
+      .get('/users/2/?access_token=ABC123');
     // The values for the expected result are based on those defined
     // in seed data. See /seeds/create-test-users.js
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('id');
-    expect(res.body.id).toEqual(1);
+    expect(res.body.id).toEqual(2);
     expect(res.body).toHaveProperty('name');
-    expect(res.body.name).toEqual('jen');
+    expect(res.body.name).toEqual('bill');
+  });
+  it('should not respond with a single user with invalid token', async () => {
+    const res = await request(app)
+      .get('/users/2/?access_token=ABC124');
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.status).toEqual(401);
+    expect(res.body).toHaveProperty('message');
   });
 });
 
@@ -65,11 +78,12 @@ describe('POST /users', () => {
 
     // Keep the user.id for use in subsequent tests
     user.id = res.body.id;
+    console.log(user.id, 'abcc');
   });
 
   it('should create the user in the DB', async () => {
     const res = await request(app)
-      .get(`/users/${user.id}`);
+      .get(`/users/${user.id}/?access_token=ABC123`);
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('id');
     expect(res.body.id).toEqual(user.id);

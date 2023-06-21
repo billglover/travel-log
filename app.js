@@ -3,20 +3,28 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require('passport');
-const bearer = require('passport-http-bearer');
+const BearerStrategy = require('passport-http-bearer').Strategy;
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const countriesRouter = require('./routes/countries');
 const visitsRouter = require('./routes/visits');
 const tokensRouter = require('./routes/tokens');
+const tokensModels = require('./models/tokens');
 
 const app = express();
 
-function verifyToken(token, done) {
-  return done(null, {});
-}
-passport.use(new bearer.Strategy(verifyToken));
+passport.use(new BearerStrategy(async (token, done) => {
+  const user = await tokensModels.get_user_by_token(token);
+  if (user === undefined) {
+    console.log('invalid id', user);
+    const err = new Error('Inavlid token');
+    err.status = 401;
+    return done(err);
+  }
+  console.log('valid id', user);
+  return done(null, token, { scope: 'all', user_id: user.user_id });
+}));
 
 app.use(logger('dev', { skip: () => process.env.NODE_ENV === 'test' }));
 app.use(express.json());

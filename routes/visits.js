@@ -1,10 +1,11 @@
 const express = require('express');
+const passport = require('passport');
 const visitsController = require('../controllers/visits');
 
 const router = express.Router();
 
-router.get('/', visitsController.list);
-router.get('/:id', visitsController.get);
-router.post('/', visitsController.create);
+router.get('/', passport.authenticate('bearer', { session: false }), visitsController.list);
+router.get('/:id', passport.authenticate('bearer', { session: false }), visitsController.get);
+router.post('/', passport.authenticate('bearer', { session: false }), visitsController.create);
 
 module.exports = router;
