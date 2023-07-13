@@ -26,6 +26,7 @@ passport.use(new BearerStrategy(async (token, done) => {
   return done(null, token, { scope: 'all', user_id: user.user_id });
 }));
 
+app.set('view engine', 'ejs');
 app.use(logger('dev', { skip: () => process.env.NODE_ENV === 'test' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -37,6 +38,10 @@ app.use('/users', usersRouter);
 app.use('/countries', countriesRouter);
 app.use('/visits', visitsRouter);
 app.use('/tokens', tokensRouter);
+
+app.get('/about', (req, res) => {
+  res.render('about', { name: 'Bill', countries: ['Croatia', 'Spain', 'Italy'] });
+});
 
 function errorHandler(err, req, res, next) {
   const data = {
