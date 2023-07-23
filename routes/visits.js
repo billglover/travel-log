@@ -7,5 +7,5 @@ const router = express.Router();
 router.get('/', passport.authenticate('bearer', { session: false }), visitsController.list);
 router.get('/:id', passport.authenticate('bearer', { session: false }), visitsController.get);
 router.post('/', passport.authenticate('bearer', { session: false }), visitsController.create);
-
+router.delete('/:id', passport.authenticate('bearer', { session: false }), visitsController.delete);
 module.exports = router;

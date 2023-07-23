@@ -39,3 +39,11 @@ exports.create = async (req, res) => {
     throw err;
   }
 };
+
+exports.delete = async (req, res) => {
+  const deletedVisit = await visitsModel.delete_by_id(req.params.id);
+  if (deletedVisit === 0) {
+    return res.sendStatus(404);
+  }
+  return res.sendStatus(204);
+};

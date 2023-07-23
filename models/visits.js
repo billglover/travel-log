@@ -117,3 +117,8 @@ exports.create = async (userId, countryId, arrivalTime, departureTime) => {
     }
   }
 };
+
+exports.delete_by_id = async (id) => {
+  const deletedVisit = await db('visits').where({ id }).del();
+  return deletedVisit;
+};
