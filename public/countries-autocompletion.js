@@ -1,11 +1,10 @@
 'use stricts';
 
 document.addEventListener('DOMContentLoaded', function () {
-  //const allCountries = function () {};
-  const stringCountries = JSON.stringify(allCountries);
+  //allCountries defined in about.ejs(html)
   const autocompleteInput = document.getElementById("country");
   const autocomplete = new Awesomplete(autocompleteInput, {
-    list: stringCountries,
+    list: allCountries,
     minChars: 1,
     autoFirst: true,
   });

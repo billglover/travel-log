@@ -39,8 +39,11 @@ app.use('/countries', countriesRouter);
 app.use('/visits', visitsRouter);
 app.use('/tokens', tokensRouter);
 
-app.get('/about', (req, res) => {
-  res.render('about', { name: 'Bill', countries: ['Croatia', 'Spain', 'Italy'] });
+const countriesModel = require('./models/countries');
+app.get('/about', async (req, res) => {
+  const allCountries = await countriesModel.get_all();
+  const countryNames = allCountries.map((country) => country.name);
+  res.render('about', { name: 'Bill', countries: ['Croatia', 'Spain', 'Italy'], allCountries: countryNames });
 });
 
 function errorHandler(err, req, res, next) {
