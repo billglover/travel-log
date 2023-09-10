@@ -138,3 +138,19 @@ describe('POST /visit (with timezone)', () => {
     expect(res.body).toHaveProperty('message');
   });
 });
+
+describe('GET /newVisits', () => {
+  it('should respond with status 200 with valid token', async () => {
+    const res = await request(app).get('/new-visits?access_token=DEF456');
+    expect(res.statusCode).toEqual(200);
+    expect(res.body[0]).toHaveProperty('user');
+    expect(res.body[0]).toHaveProperty('country');
+    expect(res.body.id).not.toBe(null);
+  });
+  it('should respond with status 401 with invalid token', async () => {
+    const res = await request(app).get('/visits?access_token=ABC455');
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.status).toEqual(401);
+    expect(res.body).toHaveProperty('message');
+  });
+});

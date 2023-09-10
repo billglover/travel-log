@@ -11,6 +11,8 @@ const countriesRouter = require('./routes/countries');
 const visitsRouter = require('./routes/visits');
 const tokensRouter = require('./routes/tokens');
 const tokensModels = require('./models/tokens');
+const newVisitsRouter = require('./routes/visits');
+const aboutRouter = require('./routes/about');
 
 const app = express();
 
@@ -38,6 +40,8 @@ app.use('/users', usersRouter);
 app.use('/countries', countriesRouter);
 app.use('/visits', visitsRouter);
 app.use('/tokens', tokensRouter);
+app.use('/new-visits', newVisitsRouter);
+app.use('/about', aboutRouter);
 
 const countriesModel = require('./models/countries');
 app.get('/about', async (req, res) => {

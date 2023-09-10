@@ -8,4 +8,5 @@ router.get('/', passport.authenticate('bearer', { session: false }), visitsContr
 router.get('/:id', passport.authenticate('bearer', { session: false }), visitsController.get);
 router.post('/', passport.authenticate('bearer', { session: false }), visitsController.create);
 router.delete('/:id', passport.authenticate('bearer', { session: false }), visitsController.delete);
+router.get('/new', passport.authenticate('bearer', { session: false }), visitsController.list);
 module.exports = router;
