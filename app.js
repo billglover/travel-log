@@ -12,7 +12,6 @@ const visitsRouter = require('./routes/visits');
 const tokensRouter = require('./routes/tokens');
 const tokensModels = require('./models/tokens');
 const newVisitsRouter = require('./routes/visits');
-const aboutRouter = require('./routes/about');
 
 const app = express();
 
@@ -35,19 +34,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/countries', countriesRouter);
-app.use('/visits', visitsRouter);
-app.use('/tokens', tokensRouter);
-app.use('/new-visits', newVisitsRouter);
-app.use('/about', aboutRouter);
+const apiPrefix = '/api';
+app.use(`${apiPrefix}/`, indexRouter);
+app.use(`${apiPrefix}/users`, usersRouter);
+app.use(`${apiPrefix}/countries`, countriesRouter);
+app.use(`${apiPrefix}/visits`, visitsRouter);
+app.use(`${apiPrefix}/tokens`, tokensRouter);
+app.use(`${apiPrefix}/new-visits`, newVisitsRouter);
 
 const countriesModel = require('./models/countries');
-app.get('/about', async (req, res) => {
+app.get('/new-visits', async (req, res) => {
   const allCountries = await countriesModel.get_all();
   const countryNames = allCountries.map((country) => country.name);
-  res.render('about', { name: 'Bill', countries: ['Croatia', 'Spain', 'Italy'], allCountries: countryNames });
+  res.render('new-visits', { name: 'Bill', countries: ['Croatia', 'Spain', 'Italy'], allCountries: countryNames });
 });
 
 function errorHandler(err, req, res, next) {

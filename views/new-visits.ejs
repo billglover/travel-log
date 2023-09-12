@@ -12,14 +12,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.2/awesomplete.min.js"></script>
   </head>
   <body>
-    <form action="/vists" method="post" class="form">
+    <h1>Hi <%= name %>, you have travelled to the following places:</h1>
+    <ul>
+      <% countries.forEach(function(country) { %>
+      <li><%= country %></li>
+      <% }); %>
+    </ul>
+    <p>
+      <strong> Keep Exploring! </strong>
+    </p>
+    <form action="/visits" method="post" class="form">
       <div class="form">
         <label for="countryName">
           Enter country:
           <input type="text" id="country" name="country" />
         </label>
         <label for="arrivalTime">
-          Enter arrrival time:
+          Enter arrival time:
           <input
             type="datetime-local"
             id="arrivalTime"
@@ -39,7 +48,7 @@
         <button>Save</button>
       </div>
     </form>
-    <script class="awesomplete" src="./countries-autocompletion.js"></script>
+    <script class="awesomplete" src="/countries-autocompletion.js"></script>
     <script>
       const allCountries = <%- JSON.stringify(allCountries) %>;
     </script>
