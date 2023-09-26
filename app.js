@@ -40,13 +40,19 @@ app.use(`${apiPrefix}/users`, usersRouter);
 app.use(`${apiPrefix}/countries`, countriesRouter);
 app.use(`${apiPrefix}/visits`, visitsRouter);
 app.use(`${apiPrefix}/tokens`, tokensRouter);
-app.use(`${apiPrefix}/new-visits`, newVisitsRouter);
+app.use(`${apiPrefix}/new-visits`, newVisitsRouter);  
 
 const countriesModel = require('./models/countries');
+const usersModel= require('./models/users');
+const visitsModel = require('./models/visits');
 app.get('/new-visits', async (req, res) => {
+  //console.log(req.query.access_token);
   const allCountries = await countriesModel.get_all();
   const countryNames = allCountries.map((country) => country.name);
-  res.render('new-visits', { name: 'Bill', countries: ['Croatia', 'Spain', 'Italy'], allCountries: countryNames });
+  const user = await usersModel.get_by_token(req.query.access_token);
+  const visits = await visitsModel.get_by_user_id(user.id);
+  console.log(visits);
+  res.render('new-visits', { name: user.name, countries: visits.map((visit) => visit.name), allCountries: countryNames });
 });
 
 function errorHandler(err, req, res, next) {

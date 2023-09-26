@@ -83,6 +83,16 @@ exports.get_by_id = async (id, userId) => {
   return singleVisit;
 };
 
+exports.get_by_user_id = async (userId) => {
+  // const visits = await db('visits', 'countries')
+  //   .join('countries', 'visits.country_id', '=', 'countries.name')
+  //   .where({ user_id: userId });
+  const visits = await db('visits')
+  .join('countries', 'countries.id', 'visits.country_id')
+  .select( 'countries.name')
+  .where({ user_id: userId });
+    return visits;
+};
 // creates & saves a new visit in SQLite DB
 exports.create = async (userId, countryId, arrivalTime, departureTime) => {
   console.log({
