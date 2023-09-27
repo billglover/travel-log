@@ -46,7 +46,14 @@ exports.get_by_id = async (id, userId) => {
   const visit = await db('visits', 'countries')
     .join('countries', 'visits.country_id', '=', 'countries.id')
     .where({ 'visits.id': id, 'visits.user_id': userId })
-    .first(['visits.id', 'user_id', 'country_id', 'name', 'arrival_time', 'departure_time']);
+    .first([
+      'visits.id',
+      'user_id',
+      'country_id',
+      'name',
+      'arrival_time',
+      'departure_time',
+    ]);
   if (visit === undefined) {
     throw new NotFoundError('visit not found');
   }
@@ -88,15 +95,18 @@ exports.get_by_user_id = async (userId) => {
   //   .join('countries', 'visits.country_id', '=', 'countries.name')
   //   .where({ user_id: userId });
   const visits = await db('visits')
-  .join('countries', 'countries.id', 'visits.country_id')
-  .select( 'countries.name')
-  .where({ user_id: userId });
-    return visits;
+    .join('countries', 'countries.id', 'visits.country_id')
+    .select('countries.name')
+    .where({ user_id: userId });
+  return visits;
 };
 // creates & saves a new visit in SQLite DB
 exports.create = async (userId, countryId, arrivalTime, departureTime) => {
   console.log({
-    userId, countryId, arrivalTime, departureTime,
+    userId,
+    countryId,
+    arrivalTime,
+    departureTime,
   });
   try {
     const atTs = Date.parse(arrivalTime);
@@ -120,7 +130,9 @@ exports.create = async (userId, countryId, arrivalTime, departureTime) => {
     return visit;
   } catch (err) {
     if (err.code === 'SQLITE_CONSTRAINT') {
-      throw new ConstraintIdNullError(`visit can't be created due to null user or country ID; userId='${userId}', countryId='${countryId}`);
+      throw new ConstraintIdNullError(
+        `visit can't be created due to null user or country ID; userId='${userId}', countryId='${countryId}`,
+      );
     } else {
       console.log('unable to create visit, SQLite error:', err);
       throw new Error('unable to create visit');

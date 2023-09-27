@@ -15,17 +15,19 @@ const newVisitsRouter = require('./routes/visits');
 
 const app = express();
 
-passport.use(new BearerStrategy(async (token, done) => {
-  const user = await tokensModels.get_user_by_token(token);
-  if (user === undefined) {
-    console.log('invalid id', user);
-    const err = new Error('Inavlid token');
-    err.status = 401;
-    return done(err);
-  }
-  console.log('valid id', user);
-  return done(null, token, { scope: 'all', user_id: user.user_id });
-}));
+passport.use(
+  new BearerStrategy(async (token, done) => {
+    const user = await tokensModels.get_user_by_token(token);
+    if (user === undefined) {
+      //console.log('invalid id', user);
+      const err = new Error('Inavlid token');
+      err.status = 401;
+      return done(err);
+    }
+    //console.log('valid id', user);
+    return done(null, token, { scope: 'all', user_id: user.user_id });
+  }),
+);
 
 app.set('view engine', 'ejs');
 app.use(logger('dev', { skip: () => process.env.NODE_ENV === 'test' }));
@@ -40,10 +42,10 @@ app.use(`${apiPrefix}/users`, usersRouter);
 app.use(`${apiPrefix}/countries`, countriesRouter);
 app.use(`${apiPrefix}/visits`, visitsRouter);
 app.use(`${apiPrefix}/tokens`, tokensRouter);
-app.use(`${apiPrefix}/new-visits`, newVisitsRouter);  
+app.use(`${apiPrefix}/new-visits`, newVisitsRouter);
 
 const countriesModel = require('./models/countries');
-const usersModel= require('./models/users');
+const usersModel = require('./models/users');
 const visitsModel = require('./models/visits');
 app.get('/new-visits', async (req, res) => {
   //console.log(req.query.access_token);
@@ -51,8 +53,12 @@ app.get('/new-visits', async (req, res) => {
   const countryNames = allCountries.map((country) => country.name);
   const user = await usersModel.get_by_token(req.query.access_token);
   const visits = await visitsModel.get_by_user_id(user.id);
-  console.log(visits);
-  res.render('new-visits', { name: user.name, countries: visits.map((visit) => visit.name), allCountries: countryNames });
+  //console.log(visits);
+  res.render('new-visits', {
+    name: user.name,
+    countries: visits.map((visit) => visit.name),
+    allCountries: countryNames,
+  });
 });
 
 function errorHandler(err, req, res, next) {
