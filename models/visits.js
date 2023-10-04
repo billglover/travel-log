@@ -96,7 +96,7 @@ exports.get_by_user_id = async (userId) => {
   //   .where({ user_id: userId });
   const visits = await db('visits')
     .join('countries', 'countries.id', 'visits.country_id')
-    .select('countries.name')
+    .select('countries.name', 'visits.id')
     .where({ user_id: userId });
   return visits;
 };

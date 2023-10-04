@@ -21,7 +21,11 @@
     <p>
       <strong> Keep Exploring! </strong>
     </p>
-    <form action="/api/visits?access_token=ABC123" method="post" class="form">
+    <form
+      action="/api/visits?access_token=<%= token %>&user_id=<%= userId %>"
+      method="post"
+      class="form"
+    >
       <div class="form">
         <label for="countryName">
           Enter country:
