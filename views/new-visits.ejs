@@ -15,7 +15,7 @@
     <h1>Hi <%= name %>, you have travelled to the following places:</h1>
     <ul>
       <% countries.forEach(function(country) { %>
-      <li><%= country %></li>
+      <li><%= country.name %>: <%= country.id %></li>
       <% }); %>
     </ul>
     <p>

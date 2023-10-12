@@ -42,7 +42,6 @@ app.use(`${apiPrefix}/users`, usersRouter);
 app.use(`${apiPrefix}/countries`, countriesRouter);
 app.use(`${apiPrefix}/visits`, visitsRouter);
 app.use(`${apiPrefix}/tokens`, tokensRouter);
-app.use(`${apiPrefix}/new-visits`, newVisitsRouter);
 
 const countriesModel = require('./models/countries');
 const usersModel = require('./models/users');
@@ -53,13 +52,15 @@ app.get('/new-visits', async (req, res) => {
   const countryNames = allCountries.map((country) => country.name);
   const user = await usersModel.get_by_token(req.query.access_token);
   const visits = await visitsModel.get_by_user_id(user.id);
+  console.log(req.query.visit_id);
   console.log(visits);
   res.render('new-visits', {
     token: req.query.access_token,
     userId: user.id,
     name: user.name,
-    countries: visits.map((visit) => visit.name),
-    allCountries: countryNames,
+    countries: visits,
+    // countryIds: visits.map((visit) => visit.id),
+    allCountries: countryNames, // this is for autocomplete feature
   });
 });
 
