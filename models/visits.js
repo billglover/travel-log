@@ -90,7 +90,7 @@ exports.get_by_id = async (id, userId) => {
   return singleVisit;
 };
 
-//retrieves all visits via userId
+// retrieves all visits via userId
 exports.get_by_user_id = async (userId) => {
   // const visits = await db('visits', 'countries')
   //   .join('countries', 'visits.country_id', '=', 'countries.name')

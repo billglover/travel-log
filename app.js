@@ -11,7 +11,6 @@ const countriesRouter = require('./routes/countries');
 const visitsRouter = require('./routes/visits');
 const tokensRouter = require('./routes/tokens');
 const tokensModels = require('./models/tokens');
-const newVisitsRouter = require('./routes/visits');
 
 const app = express();
 
@@ -19,12 +18,12 @@ passport.use(
   new BearerStrategy(async (token, done) => {
     const user = await tokensModels.get_user_by_token(token);
     if (user === undefined) {
-      //console.log('invalid id', user);
+      // console.log('invalid id', user);
       const err = new Error('Inavlid token');
       err.status = 401;
       return done(err);
     }
-    //console.log('valid id', user);
+    // console.log('valid id', user);
     return done(null, token, { scope: 'all', user_id: user.user_id });
   }),
 );
@@ -46,8 +45,9 @@ app.use(`${apiPrefix}/tokens`, tokensRouter);
 const countriesModel = require('./models/countries');
 const usersModel = require('./models/users');
 const visitsModel = require('./models/visits');
+
 app.get('/new-visits', async (req, res) => {
-  //console.log(req.query.access_token);
+  // console.log(req.query.access_token);
   const allCountries = await countriesModel.get_all();
   const countryNames = allCountries.map((country) => country.name);
   const user = await usersModel.get_by_token(req.query.access_token);
