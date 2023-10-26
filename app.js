@@ -64,6 +64,20 @@ app.get('/new-visits', async (req, res) => {
   });
 });
 
+app.get('/view-visit', async (req, res) => {
+  // console.log(req, 'view-visit');
+  const user = await usersModel.get_by_token(req.query.access_token);
+  const visit = await visitsModel.get_by_id(req.query.visit_id, user.id);
+  console.log('user:', user);
+  console.log('visit:', visit);
+  res.render('view-visit', {
+    token: req.query.access_token,
+    userId: user.id,
+    name: user.name,
+    visit,
+  });
+});
+
 function errorHandler(err, req, res, next) {
   const data = {
     status: err.status || 500,
