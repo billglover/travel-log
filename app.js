@@ -47,7 +47,7 @@ const usersModel = require('./models/users');
 const visitsModel = require('./models/visits');
 
 app.get('/new-visits', async (req, res) => {
-  // console.log(req.query.access_token);
+  console.log(req.query.access_token, 'access_token');
   const allCountries = await countriesModel.get_all();
   const countryNames = allCountries.map((country) => country.name);
   const user = await usersModel.get_by_token(req.query.access_token);
