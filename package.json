@@ -6,6 +6,8 @@
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
     "test": "cross-env NODE_ENV=test jest --verbose=true",
+    "test1": "cross-env NODE_ENV=test jest --verbose=true routes/visits.test.js",
+    "test-watch": "cross-env NODE_ENV=test jest --watch --verbose=true",
     "lint": "npx eslint ./"
   },
   "dependencies": {
@@ -16,7 +18,7 @@
     "morgan": "~1.9.1",
     "passport": "^0.6.0",
     "passport-http-bearer": "^1.0.1",
-    "sqlite3": "^5.1.2"
+    "sqlite3": "^5.1.6"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

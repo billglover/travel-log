@@ -52,7 +52,6 @@ app.get('/new-visits', async (req, res) => {
   const countryNames = allCountries.map((country) => country.name);
   const user = await usersModel.get_by_token(req.query.access_token);
   const visits = await visitsModel.get_by_user_id(user.id);
-  console.log(req.query.visit_id);
   console.log(visits);
   res.render('new-visits', {
     token: req.query.access_token,
