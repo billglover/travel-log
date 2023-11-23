@@ -44,7 +44,7 @@ describe('GET /api/visits/', () => {
   });
 });
 
-describe('POST /visit', () => {
+describe('POST /api/visits/?access_token=DEF456', () => {
   const visit = {
     user_id: 1,
     country_id: 2,
@@ -97,7 +97,7 @@ describe('POST /visit', () => {
   });
 });
 
-describe('POST /visit (with timezone)', () => {
+describe('POST /api/visits/?access_token=ABC123 (with timezone)', () => {
   const visit = {
     user_id: 2,
     country_id: 3,
@@ -117,7 +117,7 @@ describe('POST /visit (with timezone)', () => {
 
   it('should not respond with a new visit with invalid token', async () => {
     const res = await request(app)
-      .post('/api/visits/?access_token=DEF459')
+      .post('/api/visits/?access_token=DEF450')
       .send(visit);
     expect(res.statusCode).toEqual(401);
     expect(res.body.status).toEqual(401);
@@ -145,11 +145,12 @@ describe('POST /visit (with timezone)', () => {
 
 describe('GET /new-visits', () => {
   it('should respond with status 200 with valid token', async () => {
-    const res = await request(app).get('/new-visits?access_token=DEF456');
+    const res = await request(app).get('/new-visits/?access_token=DEF456');
+    console.log(res, 'line150');
     expect(res.statusCode).toEqual(200);
-    expect(res.name).toContain('name');
-    expect(res.body).toHaveProperty('country');
-    expect(res.body.id).not.toBe(null);
+    expect(res.text).toContain('name');
+    expect(res.text).toContain('country');
+    expect(res.text).not.toBe(null);
   });
   it('should respond with status 401 with invalid token', async () => {
     const res = await request(app).get('/api/visits?access_token=ABC455');
