@@ -11,16 +11,16 @@ afterAll(async () => {
   await db.destroy();
 });
 
-describe('GET /visits', () => {
+describe('GET /api/visits', () => {
   it('should respond with status 200 with valid token', async () => {
-    const res = await request(app).get('/visits?access_token=ABC123');
+    const res = await request(app).get('/api/visits?access_token=ABC123');
     expect(res.statusCode).toEqual(200);
     expect(res.body[0]).toHaveProperty('user');
     expect(res.body[0]).toHaveProperty('country');
     expect(res.body.id).not.toBe(null);
   });
   it('should respond with status 401 with invalid token', async () => {
-    const res = await request(app).get('/visits?access_token=ABC125');
+    const res = await request(app).get('/api/visits?access_token=ABC125');
     expect(res.statusCode).toEqual(401);
     expect(res.body.status).toEqual(401);
     expect(res.body).toHaveProperty('message');
@@ -35,17 +35,17 @@ describe.only('GET /api/visits/', () => {
     expect(res.body).toHaveProperty('user_id');
     expect(res.body.user_id).toEqual(1);
     expect(res.body).toHaveProperty('arrival_time');
-    expect(res.body.departure_time).toEqual('2022-10-30T23:00:00.000Z');
+    expect(res.body.departure_time).toEqual('2020-08-31T10:00:00.000Z');
   });
   it('should not respond with a single visit with invalid token', async () => {
-    const res = await request(app).get('/visits/13/?access_token=DEF458');
+    const res = await request(app).get('/api/visits/25/?access_token=DEF458');
     expect(res.statusCode).toEqual(401);
     expect(res.body.status).toEqual(401);
     expect(res.body).toHaveProperty('message');
   });
 });
 
-describe('POST /visit', () => {
+describe('POST /api/visits/?access_token=DEF456', () => {
   const visit = {
     user_id: 1,
     country_id: 2,
@@ -55,7 +55,7 @@ describe('POST /visit', () => {
 
   it('should respond with a new visit with valid token', async () => {
     const res = await request(app)
-      .post('/visits/?access_token=DEF456')
+      .post('/api/visits?access_token=DEF456')
       .send(visit);
     visit.id = res.body.id;
     console.log(res, 'line60');
@@ -69,7 +69,7 @@ describe('POST /visit', () => {
 
   it('should not respond with a new visit with invalid token', async () => {
     const res = await request(app)
-      .post('/visits/?access_token=DEF459')
+      .post('/api/visits/?access_token=DEF459')
       .send(visit);
     // visit.id = res.body.id;
     // console.log(visit.id, 'xyz');
@@ -80,7 +80,7 @@ describe('POST /visit', () => {
 
   it('should create the visit in the DB with valid token', async () => {
     const res = await request(app).get(
-      `/visits/${visit.id}/?access_token=DEF456`,
+      `/api/visits/${visit.id}/?access_token=DEF456`,
     );
     expect(res.statusCode).toEqual(200);
     expect(typeof res.body.user_id).toEqual('number');
@@ -91,7 +91,7 @@ describe('POST /visit', () => {
 
   it('should not create the visit in the DB with invalid token', async () => {
     const res = await request(app).get(
-      `/visits/${visit.id}/?access_token=DEF458`,
+      `/api/visits/${visit.id}/?access_token=DEF458`,
     );
     expect(res.statusCode).toEqual(401);
     expect(res.body.status).toEqual(401);
@@ -99,7 +99,7 @@ describe('POST /visit', () => {
   });
 });
 
-describe('POST /visit (with timezone)', () => {
+describe('POST /api/visits/?access_token=ABC123 (with timezone)', () => {
   const visit = {
     user_id: 2,
     country_id: 3,
@@ -110,7 +110,7 @@ describe('POST /visit (with timezone)', () => {
 
   it('should respond with a new visit with valid token', async () => {
     const res = await request(app)
-      .post('/visits/?access_token=ABC123')
+      .post('/api/visits/?access_token=ABC123')
       .send(visit);
     visit.id = res.body.id;
     expect(res.statusCode).toEqual(201);
@@ -119,7 +119,7 @@ describe('POST /visit (with timezone)', () => {
 
   it('should not respond with a new visit with invalid token', async () => {
     const res = await request(app)
-      .post('/visits/?access_token=DEF459')
+      .post('/api/visits/?access_token=DEF450')
       .send(visit);
     expect(res.statusCode).toEqual(401);
     expect(res.body.status).toEqual(401);
@@ -128,7 +128,7 @@ describe('POST /visit (with timezone)', () => {
 
   it('should create the visit in the DB with valid token', async () => {
     const res = await request(app).get(
-      `/visits/${visit.id}/?access_token=ABC123`,
+      `/api/visits/${visit.id}/?access_token=ABC123`,
     );
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('arrival_time');
@@ -137,8 +137,26 @@ describe('POST /visit (with timezone)', () => {
 
   it('should not create the visit in the DB with invalid token', async () => {
     const res = await request(app).get(
-      `/visits/${visit.id}/?access_token=DEF458`,
+      `/api/visits/${visit.id}/?access_token=DEF458`,
     );
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.status).toEqual(401);
+    expect(res.body).toHaveProperty('message');
+  });
+});
+
+describe('GET /new-visits', () => {
+  it('should respond with status 200 with valid token', async () => {
+    const res = await request(app).get('/new-visits/?access_token=DEF456');
+    console.log(res, 'line150');
+    expect(res.statusCode).toEqual(200);
+    expect(res.text).toContain('name');
+    expect(res.text).toContain('country');
+    expect(res.text).not.toBe(null);
+  });
+  it('should respond with status 401 with invalid token', async () => {
+    const res = await request(app).get('/api/visits?access_token=ABC455');
+
     expect(res.statusCode).toEqual(401);
     expect(res.body.status).toEqual(401);
     expect(res.body).toHaveProperty('message');
@@ -161,3 +179,12 @@ describe('GET /new-visits', () => {
     expect(res.body).toHaveProperty('message');
   });
 });
+
+// describe('POST /newvisits', () => {
+//   const visit = {
+//     user_id: 1,
+//     country_id: 2,
+//     arrival_time: '2023-05-23T13:30:00.000Z',
+//     departure_time: '2023-05-24T13:30:00.000Z',
+//   };
+// });

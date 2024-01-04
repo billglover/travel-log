@@ -29,4 +29,5 @@ router.get(
   passport.authenticate('bearer', { session: false }),
   visitsController.list,
 );
+
 module.exports = router;

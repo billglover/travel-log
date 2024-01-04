@@ -17,32 +17,30 @@ afterAll(async () => {
   await db.destroy();
 });
 
-describe('GET /countries', () => {
+describe('GET /api/countries', () => {
   it('should respond with an array of countries', async () => {
-    const res = await request(app)
-      .get('/countries');
+    const res = await request(app).get('/api/countries');
 
     // The values for the expected result are based on those defined
     // in seed data. See /seeds/create-test-countries.js
     expect(res.statusCode).toEqual(200);
-    expect(res.body.length).toEqual(3);
-    expect(res.body[0]).toHaveProperty('id');
-    expect(res.body[0].id).toEqual(1);
-    expect(res.body[0]).toHaveProperty('name');
-    expect(res.body[0].name).toEqual('Canada');
+    expect(res.body.length).toEqual(240);
+    expect(res.body[36]).toHaveProperty('id');
+    expect(res.body[36].id).toEqual(37); // the array index begins at 0 but id starts at 1
+    expect(res.body[36]).toHaveProperty('name');
+    expect(res.body[36].name).toEqual('Canada');
   });
 });
 
-describe('GET /countries/1', () => {
+describe('GET /api/countries/37', () => {
   it('should respond with a single country', async () => {
-    const res = await request(app)
-      .get('/countries/1');
+    const res = await request(app).get('/api/countries/37');
 
     // The values for the expected result are based on those defined
     // in seed data. See /seeds/create-test-countries.js
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('id');
-    expect(res.body.id).toEqual(1);
+    expect(res.body.id).toEqual(37);
     expect(res.body).toHaveProperty('name');
     expect(res.body.name).toEqual('Canada');
   });
