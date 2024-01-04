@@ -30,7 +30,7 @@ describe('GET /api/visits', () => {
 // add .only to run just this it block
 describe.only('GET /api/visits/', () => {
   it.only('should respond with a single visit with valid token', async () => {
-    const res = await request(app).get('/api/visits/25/?access_token=DEF456');
+    const res = await request(app).get('/api/visits/13/?access_token=DEF456');
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('user_id');
     expect(res.body.user_id).toEqual(1);

@@ -24,7 +24,7 @@ exports.get_all = async (userId) => {
     .join('countries', 'visits.country_id', '=', 'countries.id')
     .select(['visits.id', 'user_id', 'country_id', 'name'])
     .where({ 'visits.user_id': userId });
-
+  console.log('all visits', visits);
   const newVisits = [];
   visits.forEach((properties) => {
     const visits2 = {
@@ -43,17 +43,20 @@ exports.get_all = async (userId) => {
 
 // get_by_id returns all info regarding a single visit
 exports.get_by_id = async (id, userId) => {
+  console.log('typeof id is', typeof id);
+  console.log('typeof userId is', typeof userId);
   const visit = await db('visits')
-    .join('countries', 'visits.country_id', '=', 'countries.id')
-    .where({ 'visits.id': id, 'visits.user_id': userId })
-    .first([
-      'visits.id',
-      'user_id',
-      'country_id',
-      'name',
-      'arrival_time',
-      'departure_time',
-    ]);
+    // .join('countries', 'visits.country_id', '=', 'countries.id')
+    .where({ 'visits.id': id }) //'visits.user_id': userId })
+    .first();
+  // 'visits.id',
+  // 'user_id',
+  // 'country_id',
+  // 'countries.name',
+  // 'arrival_time',
+  // 'departure_time',
+  // );
+  console.log('visits', visit);
   if (visit === undefined) {
     throw new NotFoundError('visit not found');
   }

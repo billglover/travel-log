@@ -7,10 +7,9 @@ exports.list = async (req, res) => {
 };
 
 exports.get = async (req, res) => {
-  const visit = await visitsModel.get_by_id(
-    req.params.id,
-    req.authInfo.user_id,
-  );
+  console.log('api handler', req.params.id, req.authInfo.user_id);
+  const parsedId = parseInt(req.params.id, 10);
+  const visit = await visitsModel.get_by_id(parsedId, req.authInfo.user_id);
   return res.json(visit);
 };
 
