@@ -27,16 +27,10 @@ describe('GET /visits', () => {
   });
 });
 
-<<<<<<< Updated upstream
-describe('GET /visits/13', () => {
-  it('should respond with a single visit with valid token', async () => {
-    const res = await request(app).get('/visits/13/?access_token=DEF456');
-=======
 // add .only to run just this it block
 describe.only('GET /api/visits/', () => {
   it.only('should respond with a single visit with valid token', async () => {
     const res = await request(app).get('/api/visits/25/?access_token=DEF456');
->>>>>>> Stashed changes
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('user_id');
     expect(res.body.user_id).toEqual(1);
@@ -85,8 +79,9 @@ describe('POST /visit', () => {
   });
 
   it('should create the visit in the DB with valid token', async () => {
-    const res = await request(app)
-      .get(`/visits/${visit.id}/?access_token=DEF456`);
+    const res = await request(app).get(
+      `/visits/${visit.id}/?access_token=DEF456`,
+    );
     expect(res.statusCode).toEqual(200);
     expect(typeof res.body.user_id).toEqual('number');
     expect(res.body).toHaveProperty('arrival_time');
@@ -95,8 +90,9 @@ describe('POST /visit', () => {
   });
 
   it('should not create the visit in the DB with invalid token', async () => {
-    const res = await request(app)
-      .get(`/visits/${visit.id}/?access_token=DEF458`);
+    const res = await request(app).get(
+      `/visits/${visit.id}/?access_token=DEF458`,
+    );
     expect(res.statusCode).toEqual(401);
     expect(res.body.status).toEqual(401);
     expect(res.body).toHaveProperty('message');
@@ -131,23 +127,23 @@ describe('POST /visit (with timezone)', () => {
   });
 
   it('should create the visit in the DB with valid token', async () => {
-    const res = await request(app)
-      .get(`/visits/${visit.id}/?access_token=ABC123`);
+    const res = await request(app).get(
+      `/visits/${visit.id}/?access_token=ABC123`,
+    );
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('arrival_time');
     expect(res.body.arrival_time).toEqual(expectedArrivalTime);
   });
 
   it('should not create the visit in the DB with invalid token', async () => {
-    const res = await request(app)
-      .get(`/visits/${visit.id}/?access_token=DEF458`);
+    const res = await request(app).get(
+      `/visits/${visit.id}/?access_token=DEF458`,
+    );
     expect(res.statusCode).toEqual(401);
     expect(res.body.status).toEqual(401);
     expect(res.body).toHaveProperty('message');
   });
 });
-<<<<<<< Updated upstream
-=======
 
 describe('GET /new-visits', () => {
   it('should respond with status 200 with valid token', async () => {
@@ -165,4 +161,3 @@ describe('GET /new-visits', () => {
     expect(res.body).toHaveProperty('message');
   });
 });
->>>>>>> Stashed changes

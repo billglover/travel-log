@@ -6,7 +6,9 @@
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
     "test": "cross-env NODE_ENV=test jest --verbose=true",
-    "lint": "npx eslint ./"
+    "test1": "cross-env NODE_ENV=test jest --verbose=true ./routes/visits.test",
+    "lint": "npx eslint ./",
+    "lint:fix": "npx eslint ./ --fix"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
