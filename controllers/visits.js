@@ -22,17 +22,25 @@ exports.create = async (req, res) => {
       return res.status(400).send('Bad Reqest, should not include id');
     }
     // TODO: check userID in req matches the userID in the token
-    if (Number(req.query.user_id) !== req.authInfo.user_id) {
+    if (Number(req.body.user_id) !== req.authInfo.user_id) {
+      console.log(
+        req.body.user_id,
+        req.query.user_id,
+        req.query.access_token,
+        req.authInfo.user_id,
+        '**************************',
+      );
       return res.status(401).send('Unauthorized, user_id does not match token');
     }
-    const country = await db('countries').where({ name: req.body.country });
-
+    const country = await db('countries').where({ id: req.body.country_id });
+    console.log(country, '??????????????????????');
     const visit = await visitsModel.create(
       req.authInfo.user_id,
       country[0].id,
-      req.body.arrivalTime,
-      req.body.departureTime,
+      req.body.arrival_time,
+      req.body.departure_time,
     );
+    console.log(visit, '<<<<<<<<<<<<<<<<<<<<<');
     return res.status(201).json(visit);
   } catch (err) {
     if (err instanceof visitsModel.ConstraintIdNullError) {

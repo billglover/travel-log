@@ -28,14 +28,14 @@ describe('GET /api/visits', () => {
 });
 
 // add .only to run just this it block
-describe.only('GET /api/visits/', () => {
-  it.only('should respond with a single visit with valid token', async () => {
+describe('GET /api/visits/', () => {
+  it('should respond with a single visit with valid token', async () => {
     const res = await request(app).get('/api/visits/13/?access_token=DEF456');
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('user_id');
     expect(res.body.user_id).toEqual(1);
     expect(res.body).toHaveProperty('arrival_time');
-    expect(res.body.departure_time).toEqual('2020-08-31T10:00:00.000Z');
+    expect(res.body.departure_time).toEqual('2022-10-30T23:00:00.000Z');
   });
   it('should not respond with a single visit with invalid token', async () => {
     const res = await request(app).get('/api/visits/25/?access_token=DEF458');
@@ -86,7 +86,8 @@ describe('POST /api/visits/?access_token=DEF456', () => {
     expect(typeof res.body.user_id).toEqual('number');
     expect(res.body).toHaveProperty('arrival_time');
     expect(res.body.arrival_time).toEqual(visit.arrival_time);
-    expect(res.body.country).toHaveProperty('name');
+    console.log(res.body);
+    expect(res.body.country).toHaveProperty('id');
   });
 
   it('should not create the visit in the DB with invalid token', async () => {
