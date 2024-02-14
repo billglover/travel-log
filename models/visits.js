@@ -46,17 +46,12 @@ exports.get_by_id = async (id, userId) => {
   console.log('typeof id is', typeof id);
   console.log('typeof userId is', typeof userId);
   const visit = await db('visits')
-    // .join('countries', 'visits.country_id', '=', 'countries.id')
-    .where({ 'visits.id': id }) //'visits.user_id': userId })
-    .first();
-  // 'visits.id',
-  // 'user_id',
-  // 'country_id',
-  // 'countries.name',
-  // 'arrival_time',
+    .join('countries', 'visits.country_id', '=', 'countries.id')
+    .where({ 'visits.id': id }, { 'visits.user_id': userId });
+  // .first();
   // 'departure_time',
   // );
-  console.log('visits', visit);
+  console.log('model-visits', visit);
   if (visit === undefined) {
     throw new NotFoundError('visit not found');
   }
@@ -67,7 +62,6 @@ exports.get_by_id = async (id, userId) => {
   // Conver these numbers to dates
   const at = new Date(atTs);
   const dt = new Date(dtTs);
-
   // we can now log these
   visit.arrival_time = at.toISOString();
   visit.departure_time = dt.toISOString();
@@ -89,7 +83,7 @@ exports.get_by_id = async (id, userId) => {
     departure_time: visit.departure_time,
     arrival_time: visit.arrival_time,
   };
-  console.log(singleVisit);
+  console.log('single-visit', singleVisit);
   return singleVisit;
 };
 
