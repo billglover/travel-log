@@ -29,19 +29,16 @@ exports.create = async (req, res) => {
         req.query.user_id,
         req.query.access_token,
         req.authInfo.user_id,
-        '**************************',
       );
       return res.status(401).send('Unauthorized, user_id does not match token');
     }
     const country = await db('countries').where({ id: req.body.country_id });
-    console.log(country, '??????????????????????');
     const visit = await visitsModel.create(
       req.authInfo.user_id,
       country[0].id,
       req.body.arrival_time,
       req.body.departure_time,
     );
-    console.log(visit, '<<<<<<<<<<<<<<<<<<<<<');
     return res.status(201).json(visit);
   } catch (err) {
     if (err instanceof visitsModel.ConstraintIdNullError) {

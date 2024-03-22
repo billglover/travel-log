@@ -58,14 +58,12 @@ exports.get_by_id = async (id, userId) => {
   // Parse dates in the DB from strings to number (seconds since UNIX epoch)
 
   const atTs = Date.parse(visit.arrival_time);
-  console.log(atTs, visit.arrival_time, visit, '$$$$$$$$$$$#########');
   const dtTs = Date.parse(visit.departure_time);
 
   // Conver these numbers to dates
   const at = new Date(atTs);
   const dt = new Date(dtTs);
   // we can now log these
-  console.log(at, '+++++++~~~~~~~~~~~~~');
   visit.arrival_time = at.toISOString();
   visit.departure_time = dt.toISOString();
   /* const singleVisit = [];
@@ -86,7 +84,6 @@ exports.get_by_id = async (id, userId) => {
     departure_time: visit.departure_time,
     arrival_time: visit.arrival_time,
   };
-  console.log('single-visit', singleVisit);
   return singleVisit;
 };
 
@@ -103,13 +100,6 @@ exports.get_by_user_id = async (userId) => {
 };
 // creates & saves a new visit in SQLite DB
 exports.create = async (userId, countryId, arrivalTime, departureTime) => {
-  console.log(
-    userId,
-    countryId,
-    arrivalTime,
-    departureTime,
-    '&&&&&&&&&&&&&&&&&&&&&',
-  );
   try {
     const atTs = Date.parse(arrivalTime);
     const dtTs = Date.parse(departureTime);
