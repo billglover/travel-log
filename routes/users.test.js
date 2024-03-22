@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../app');
 const db = require('../db/db');
+const users = require('../models/users');
 
 // Update the database with the latest schema and load seed data before
 // running tests. If NODE_ENV is set to `test` then the database used
@@ -17,10 +18,9 @@ afterAll(async () => {
   await db.destroy();
 });
 
-describe('GET /users', () => {
+describe('GET /api/users', () => {
   it('should respond with an array of users with valid token', async () => {
-    const res = await request(app)
-      .get('/users?access_token=DEF456');
+    const res = await request(app).get('/api/users?access_token=DEF456');
 
     // The values for the expected result are based on those defined
     // in seed data. See /seeds/create-test-users.js
@@ -32,18 +32,16 @@ describe('GET /users', () => {
     expect(res.body[0].name).toEqual('jen');
   });
   it('should not respond with an array of users with invalid token', async () => {
-    const res = await request(app)
-      .get('/users?access_token=DEF457');
+    const res = await request(app).get('/api/users?access_token=DEF457');
     expect(res.statusCode).toEqual(401);
     expect(res.body.status).toEqual(401);
     expect(res.body).toHaveProperty('message');
   });
 });
 
-describe('GET /users/2', () => {
+describe('GET /api/users/2', () => {
   it('should respond with a single user with valid token', async () => {
-    const res = await request(app)
-      .get('/users/2/?access_token=ABC123');
+    const res = await request(app).get('/api/users/2/?access_token=ABC123');
     // The values for the expected result are based on those defined
     // in seed data. See /seeds/create-test-users.js
     expect(res.statusCode).toEqual(200);
@@ -53,52 +51,49 @@ describe('GET /users/2', () => {
     expect(res.body.name).toEqual('bill');
   });
   it('should not respond with a single user with invalid token', async () => {
-    const res = await request(app)
-      .get('/users/2/?access_token=ABC124');
+    const res = await request(app).get('/api/users/2/?access_token=ABC124');
     expect(res.statusCode).toEqual(401);
     expect(res.body.status).toEqual(401);
     expect(res.body).toHaveProperty('message');
   });
 });
 
-describe('POST /users', () => {
-  const user = {
-    name: 'test_user',
-  };
-
+describe('POST /api/users', () => {
   it('should respond with a new user', async () => {
-    const res = await request(app)
-      .post('/users')
-      .send(user);
+    const userName = 'pie';
+    const res = await request(app).post('/api/users').send({ name: userName });
     expect(res.statusCode).toEqual(201);
     expect(typeof res.body.id).toEqual('number');
     expect(res.body).toHaveProperty('id');
     expect(res.body).toHaveProperty('name');
-    expect(res.body.name).toEqual(user.name);
+    expect(res.body.name).toEqual(userName);
 
-    // Keep the user.id for use in subsequent tests
-    user.id = res.body.id;
-    console.log(user.id, 'abcc');
+    // // Keep the user.id for use in subsequent tests
+    // look in database and check the user exists
+    const createdUser = await users.get_by_id(res.body.id);
+    expect(createdUser.name).toEqual(userName);
   });
 
   it('should create the user in the DB', async () => {
-    const res = await request(app)
-      .get(`/users/${user.id}/?access_token=ABC123`);
+    const newUser = await users.create('cake');
+    const res = await request(app).get(
+      `/api/users/${newUser.id}/?access_token=ABC123`,
+    );
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('id');
-    expect(res.body.id).toEqual(user.id);
+    expect(res.body.id).toEqual(newUser.id);
     expect(res.body).toHaveProperty('name');
-    expect(res.body.name).toEqual(user.name);
+    expect(res.body.name).toEqual(newUser.name);
   });
 
   it('should not create the same user twice', async () => {
-    const res = await request(app)
-      .post('/users')
-      .send(user);
+    const name = 'chocolate';
+    await users.create(name);
+    const res = await request(app).post('/api/users').send({ name });
     expect(res.statusCode).toEqual(400);
     expect(res.body).toHaveProperty('status');
     expect(res.body.status).toEqual(400);
     expect(res.body).toHaveProperty('message');
-    expect(res.body.message).toEqual(`user '${user.name}' already exists`);
+    expect(res.body.message).toEqual(`user '${name}' already exists`);
   });
 });

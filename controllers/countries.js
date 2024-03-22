@@ -32,3 +32,12 @@ exports.create = async (req, res) => {
     throw err;
   }
 };
+
+exports.delete = async (req, res) => {
+  const numberOfDeletedCountry = await countriesModel.delete_by_id(req.params.id);
+  if (numberOfDeletedCountry === 0) {
+    return res.sendStatus(404);
+  }
+  console.log(numberOfDeletedCountry);
+  return res.sendStatus(204);
+};

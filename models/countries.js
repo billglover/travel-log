@@ -11,7 +11,7 @@ exports.CountryExistsError = CountryExistsError;
 
 // get_all returns all the countries from the data store.
 exports.get_all = async () => {
-  const countries = await db('countries').select(['id', 'name']);
+  const countries = await db('countries').select(['id', 'name']).orderBy('id');
   return countries;
 };
 
@@ -43,4 +43,10 @@ exports.create = async (name) => {
       throw new Error('unable to create country');
     }
   }
+};
+
+// delete erases a country in the data store
+exports.delete_by_id = async (id) => {
+  const numberOfDeletedCountry = await db('countries').where({ id }).del();
+  return numberOfDeletedCountry;
 };

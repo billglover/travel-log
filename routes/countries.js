@@ -7,5 +7,5 @@ router.get('/', countriesController.list);
 router.get('/search', countriesController.search);
 router.get('/:id', countriesController.get);
 router.post('/', countriesController.create);
-
+router.delete('/:id', countriesController.delete);
 module.exports = router;
